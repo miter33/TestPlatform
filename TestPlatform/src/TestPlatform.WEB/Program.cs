@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
 namespace TestPlatform.WEB
@@ -7,14 +8,29 @@ namespace TestPlatform.WEB
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            IConfiguration configuration = CreateConfiguration();
+            CreateHostBuilder(configuration, args).Build().Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
+        private static IHostBuilder CreateHostBuilder(IConfiguration config, string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                })
+            .ConfigureAppConfiguration(builder =>
+            {
+                builder.AddConfiguration(config);
+            });
+
+        private static IConfiguration CreateConfiguration()
+        {
+            IConfigurationBuilder configuration = new ConfigurationBuilder();
+
+            return configuration
+                .AddJsonFile("appsettings.json", false, true)
+                .AddEnvironmentVariables().Build();
+
+        }
     }
 }

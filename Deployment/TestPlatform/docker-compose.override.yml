@@ -1,0 +1,20 @@
+# docker-compose.yml (Base)
+version: "3.8"
+ 
+services:
+  testplatform:
+    hostname: testplatform
+    container_name: web
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=db;Database=Test;User=sa;Password=Kad@123456
+
+  db:
+    hostname: db
+    container_name: mssql
+    volumes:
+      - ${relatedPath}db:/var/opt/mssql/data
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Kad@123456
+    ports:
+      - 1433:1433
