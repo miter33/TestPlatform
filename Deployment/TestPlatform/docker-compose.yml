@@ -1,0 +1,25 @@
+# docker-compose.yml (Base)
+version: "3.8"
+ 
+services:
+  testplatform:
+    image: testplatform
+    container_name: web
+    build:
+      context: ${relatedPath}TestPlatform
+      dockerfile: src/TestPlatform.WEB/Dockerfile
+    ports:
+      - 8080:80
+    depends_on:
+      - db
+   
+  db:
+    image: "mcr.microsoft.com/mssql/server"
+    container_name: mssql
+    volumes:
+      - ${relatedPath}db:/var/opt/mssql/data
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Kad@123456
+    ports:
+      - 1433:1433
